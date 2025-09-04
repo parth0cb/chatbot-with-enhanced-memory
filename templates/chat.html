@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+<head>
+    <title>Chat with LLM</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="chat-container">
+        <div class="left-section">
+            <div class="chat-box" id="chat-box">
+                {% for role, message in chat_history %}
+                    <div class="chat-element {{ 'assistant-message' if role == 'Assistant' else 'user-message' }}">
+                        <div class="sender">{{ role }}:</div>
+                        {% if role == 'Assistant' %}
+                            {{ message | safe }}
+                        {% else %}
+                            {{ message }}
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+            <form method="post" id="chat-form">
+                <textarea name="message" id="message-input" placeholder="Type a message..." autocomplete="off" required></textarea>
+                <div style="display: flex; flex-wrap: wrap; justify-content: space-between;">
+                    <a href="{{ url_for('reset') }}">Reset Chat</a>
+                    <button type="submit" id="send-button">Send</button>
+                </div>
+            </form>
+        </div>
+        <div class="memory-timeline">
+            <h3>Memory Timeline</h3>
+            <ul id="memory-list">
+                {% for fact in memory_timeline %}
+                    <li>{{ fact }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    
+    <script src="{{ url_for('static', filename='chat.js') }}"></script>
+</body>
+</html>
