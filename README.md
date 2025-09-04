@@ -93,4 +93,4 @@ You can modify the memory system by editing the system prompt in `app.py`. The c
 
 ## License
 
-MIT
+MIT Licence
