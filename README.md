@@ -1,6 +1,6 @@
-# Enhanced Memory Chat Application
+# Chatbot with enhanced memory
 
-A Flask-based web application that enables conversational AI with persistent memory capabilities. This chatbot remembers important information across conversations, allowing for more context-aware and personalized interactions.
+A conversational AI with persistent memory capabilities. This chatbot deliberately remembers important information across conversations, allowing for more context-aware and personalized interactions.
 
 ## Features
 
