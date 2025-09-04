@@ -1,6 +1,6 @@
 # Chatbot with enhanced memory
 
-A conversational AI with persistent memory capabilities. This chatbot deliberately remembers important information across conversations, allowing for more context-aware and personalized interactions.
+A conversational AI that deliberately remembers important information across conversations, allowing for more context-aware and personalized interactions.
 
 ## Features
 
@@ -42,11 +42,6 @@ python app.py
    - **API Key**: Your OpenAI or compatible API key
    - **Base URL**: API endpoint (e.g., `https://api.openai.com/v1` for OpenAI, or your local LLM endpoint)
    - **Model Name**: The model to use (e.g., `gpt-3.5-turbo`, `gpt-4`, or your local model name)
-
-4. Begin chatting! The application will:
-   - Maintain your conversation history
-   - Automatically identify and store important information in the memory timeline
-   - Use stored memories to provide more contextually relevant responses
 
 ## Memory System
 
