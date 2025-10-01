@@ -106,6 +106,65 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+
+    // --- memory timeline rendering ---
+
+    const storageKey = "memory_timeline";
+
+    function getMemoryTimeline() {
+        const stored = localStorage.getItem(storageKey);
+        return stored ? stored.split('\n').map(item => item.trim()).filter(Boolean) : [];
+    }
+
+    function saveMemoryTimeline(items) {
+        const uniqueItems = [...new Set(items.map(i => i.trim()))]; // Avoid duplicates
+        localStorage.setItem(storageKey, uniqueItems.join('\n'));
+        renderList();
+    }
+
+    function renderList() {
+        const ul = document.getElementById("memory-list");
+        ul.innerHTML = "";
+        const items = getMemoryTimeline();
+
+        items.forEach((item, index) => {
+            const li = document.createElement("li");
+
+            const span = document.createElement("span");
+            span.textContent = item;
+
+            const removeBtn = document.createElement("button");
+            removeBtn.textContent = "Remove";
+            removeBtn.style.marginLeft = "10px";
+            removeBtn.onclick = () => {
+                const updatedItems = getMemoryTimeline();
+                updatedItems.splice(index, 1);
+                saveMemoryTimeline(updatedItems);
+            };
+
+            li.appendChild(span);
+            li.appendChild(removeBtn);
+            ul.appendChild(li);
+        });
+
+        document.getElementById("memory_timeline_input").value = getMemoryTimeline().join('\n');
+    }
+
+    // Clear all memory
+    document.getElementById("clear-all").addEventListener("click", () => {
+        localStorage.removeItem(storageKey);
+        renderList();
+    });
+
+    // Run on load
+    function loadInitialMemoryFromBackend() {
+        const textarea = document.getElementById('initial-memory');
+        const memoryData = textarea ? textarea.value.trim() : '';
+        localStorage.setItem(storageKey, memoryData);
+    }
+
+    loadInitialMemoryFromBackend();
+    renderList();
     
     
     chatForm.addEventListener('submit', function(e) {
@@ -113,7 +172,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const message = messageInput.value.trim();
         if (!message) return;
-        
         
         const userDiv = createChatElement('User', message);
         chatBox.appendChild(userDiv);
@@ -128,6 +186,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const formData = new FormData();
         formData.append('message', message);
+        formData.append('memory_timeline', getMemoryTimeline().join('\n'));
         
         fetch(window.location.href, {
             method: 'POST',

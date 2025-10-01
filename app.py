@@ -77,15 +77,13 @@ def chat():
 
     
     chat_history = session.get("chat_history", [])
-    memory_timeline = session.get("memory_timeline", [])
-
-    
-    long_term_memory_text = "\n".join(memory_timeline)
+    memory_timeline_str = request.form.get("memory_timeline", "None yet")
+    memory_timeline = memory_timeline_str.split('\n') if memory_timeline_str else []
 
 
     system_prompt = f"""
 You are a helpful assistant with access to long-term memory. Use the following long-term memories to improve your responses:
-{long_term_memory_text}
+{memory_timeline_str}
 
 ===
 
@@ -153,13 +151,13 @@ Always be thoughtful and minimal when deciding to save. Your responses should re
             
             if new_memories:
                 memory_timeline.extend(new_memories)
+                session["memory_timeline"] = memory_timeline
             
             assistant_message_clean = remove_memory_tags(assistant_message)
             
             chat_history.append(("Assistant", assistant_message_clean))
             
             session["chat_history"] = chat_history
-            session["memory_timeline"] = memory_timeline
 
             return redirect(url_for("chat"))
 
@@ -175,25 +173,12 @@ Always be thoughtful and minimal when deciding to save. Your responses should re
     return render_template(
         "chat.html",
         chat_history=chat_history_rendered,
-        memory_timeline=memory_timeline,
+        memory_timeline="\n".join(session.get("memory_timeline", [])),
     )
 
 @app.route("/reset")
 def reset():
-    api_key = session.get("api_key")
-    base_url = session.get("base_url")
-    model_name = session.get("model_name")
-
-    session.clear()
-
-    if api_key and base_url and model_name:
-        session["api_key"] = api_key
-        session["base_url"] = base_url
-        session["model_name"] = model_name
-
     session["chat_history"] = []
-    session["memory_timeline"] = []
-
     return redirect(url_for("chat"))
 
 
